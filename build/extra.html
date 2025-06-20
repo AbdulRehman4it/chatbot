@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-black text-white">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Z.A.I.A UI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="h-screen overflow-hidden font-sans bg-[#0E0E0E] flex">
+
+  <!-- Vertical Sidebar (Left Side) -->
+  <div class="w-[80px] bg-[#121212] flex flex-col items-center justify-between py-6">
+    <!-- Top logo -->
+    <div class="text-3xl font-bold">Z</div>
+
+    <!-- Middle Icons -->
+    <div class="flex flex-col gap-6">
+      <div class="w-10 h-10 bg-[#6E38F7] rounded-full flex items-center justify-center text-white">💬</div>
+      <div class="w-10 h-10 bg-[#1E1E1E] rounded-full flex items-center justify-center text-gray-400">🏠</div>
+      <div class="w-10 h-10 bg-[#1E1E1E] rounded-full flex items-center justify-center text-gray-400">🧭</div>
+    </div>
+
+    <!-- Bottom Settings/Profile -->
+    <div class="w-10 h-10 bg-[#1E1E1E] rounded-full flex items-center justify-center text-white">👤</div>
+  </div>
+
+  <!-- Main App Layout -->
+  <div class="flex-1 flex flex-col">
+
+    <!-- 🔝 Top Navbar (Right Corner Icons) -->
+    <div class="w-full h-[60px] bg-[#0E0E0E] flex justify-end items-center px-6 gap-4 border-b border-[#1E1E1E]">
+      <button class="w-9 h-9 rounded-full bg-[#1E1E1E] text-white flex items-center justify-center">✈️</button>
+      <button class="w-9 h-9 rounded-full bg-[#1E1E1E] text-white flex items-center justify-center">📷</button>
+      <button class="w-9 h-9 rounded-full bg-[#1E1E1E] text-white flex items-center justify-center">❌</button>
+      <button class="w-9 h-9 rounded-full bg-[#1E1E1E] text-white flex items-center justify-center">🐰</button>
+    </div>
+
+    <!-- 👇 Main Content (placeholder for chat, etc.) -->
+    <div class="flex-1 flex">
+      <!-- Sidebar Content (Recent Chats) -->
+      <aside class="w-[280px] bg-[#121212] p-4 hidden md:block">
+        <h2 class="text-2xl font-bold mb-4">RECENT CHATS</h2>
+        <button class="bg-[#6E38F7] w-full py-2 rounded-full font-semibold mb-4">
+          New Chat
+        </button>
+        <div class="relative mb-3">
+          <input type="text" placeholder="Search chats"
+                class="w-full pl-4 pr-10 py-2 bg-[#1E1E1E] text-sm rounded-full placeholder-gray-400"/>
+          <div class="absolute right-3 top-2.5 text-gray-400">🔍</div>
+        </div>
+        <div class="space-y-2 text-sm text-gray-300">
+          <div class="bg-[#1E1E1E] px-4 py-2 rounded-full">Looking for funny creators…</div>
+          <div class="bg-[#1E1E1E] px-4 py-2 rounded-full">Soft-spoken voice recs?</div>
+          <div class="bg-[#1E1E1E] px-4 py-2 rounded-full">I like storytelling styles</div>
+        </div>
+      </aside>
+
+      <!-- Main Chat Section (Placeholder) -->
+      <main class="flex-1 p-6 text-gray-400">
+        <p class="text-lg">Your chat content goes here...</p>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./assets/css/style.css" />
+  </head>
+  <body class="bg-[#0E0E0F]">
+    <section class="lg:block hidden">
+      <div class="font-sans bg-[#0E0E0E] flex">
+        <!-- Vertical Sidebar (Left Side) -->
+        <div
+          class="fixed left-0 top-0 w-28 h-screen flex flex-col items-center justify-between pt-6 border-r border-[#252323] sticky"
+        >
+          <div class="flex flex-col gap-16 items-center">
+            <!-- Top logo -->
+            <div class="text-3xl font-bold">
+              <img src="./assets/img/logo.png" alt="" />
+            </div>
+
+            <!-- Middle Icons -->
+            <div class="flex flex-col gap-6">
+              <div>
+                <a href=""
+                  ><img
+                    src="./assets/img/not.png"
+                    class="2xl:w-8 2xl:h-8 w-7 h-7"
+                    alt=""
+                /></a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main App Layout -->
+        <div class="flex-1 flex flex-col">
+          <!-- 🔝 Top Navbar (Right Corner Icons) -->
+          <div
+            class="w-full bg-[#0E0E0E] flex justify-end items-center px-6 gap-4 border-b border-[#252323] py-5"
+          >
+            <a href=""
+              ><img
+                src="./assets/img/next.png"
+                class="h-10 w-10 xl:h-full xl:w-full"
+                alt=""
+            /></a>
+            <a href=""
+              ><img
+                src="./assets/img/insta.png"
+                class="h-10 w-10 xl:h-full xl:w-full"
+                alt=""
+            /></a>
+            <a href=""
+              ><img
+                src="./assets/img/tiwitter.png"
+                class="h-10 w-10 xl:h-full xl:w-full"
+                alt=""
+            /></a>
+            <a href=""
+              ><img
+                src="./assets/img/cat.png"
+                class="h-10 w-10 xl:h-full xl:w-full"
+                alt=""
+            /></a>
+          </div>
+
+          <!-- 👇 Main Content (placeholder for chat, etc.) -->
+          <div class="flex-1 flex">
+            <!-- Sidebar Content (Recent Chats) -->
+            <aside
+              class="w-80 p-4 hidden md:block border my-4 mx-4 rounded-2xl border-[#252323]"
+            >
+              <h1 class="text-2xl xl:text-3xl mb-5 text-white">RECENT CHATS</h1>
+              <hr class="border-[1px] border-[#252323]" />
+              <button
+                class="bg-[#5A44E9] text-lg text-white w-full py-3 rounded-full font-semibold mb-4 flex items-center justify-center gap-5 mt-5"
+              >
+                New Chat
+                <img src="./assets/img/cht.png" alt="" />
+              </button>
+              <!-- From Uiverse.io by sudhucodes -->
+            </aside>
+
+            <!-- Main Chat Section (Placeholder) -->
+<main class="flex flex-col h-[calc(100vh-80px)] w-full border border-[#252323] my-4 rounded-2xl 2xl:mr-10 md:mr-5 bg-[#0E0E0E]">
+
+  <!-- Top Section (Title + Avatar) -->
+  <div class="p-6">
+    <div class="flex justify-between items-center">
+      <div class="flex items-center gap-4">
+        <img src="./assets/img/ziaa.png" class="2xl:w-20 2xl:h-20 h-14 w-14" alt="" />
+        <div>
+          <h1 class="text-white text-2xl">Z.A.I.A</h1>
+          <p class="text-sm text-[#777777]">Zero Artificial Intimacy Agent</p>
+        </div>
+      </div>
+      <div>
+        <a href="">
+          <img src="./assets/img/dot.png" class="2xl:w-[6px] 2xl:h-7 h-5 w-[4px]" alt="" />
+        </a>
+      </div>
+    </div>
+    <hr class="border-[1px] border-[#252323] mt-4" />
+  </div>
+
+  <!-- Chat Body (scrollable & always full width) -->
+  <div id="chatBody" class="flex-1 overflow-y-auto px-6 py-4 space-y-6 w-full"></div>
+
+  <hr class="border-[1px] border-[#252323]" />
+
+  <!-- Chat Input (fixed bottom inside main) -->
+  <div class="px-6 py-4 bg-[#0E0E0E] w-full">
+    <div class="flex items-center gap-4">
+      <div class="relative flex-1">
+        <input
+          id="userInput"
+          type="text"
+          placeholder="Start your chat.."
+          class="w-full px-4 pr-20 py-2 rounded-full bg-[#161617] text-white placeholder-[#777777] focus:outline-none"
+        />
+       
+      </div>
+
+      <button id="sendBtn" class="bg-[#5A44E9] w-10 h-10 flex items-center justify-center rounded-full">
+        <i class="fas fa-paper-plane text-white"></i>
+      </button>
+    </div>
+  </div>
+
+</main>
+
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="lg:hidden md:block">
+      <!-- Navbar -->
+      <header
+        class="flex items-center justify-between px-5 py-5 border-b border-[#252323]"
+      >
+        <div><img src="./assets/img/mobilelogo.png" alt="" /></div>
+        <!-- Hamburger Toggle -->
+        <div
+          id="toggleBtn"
+          class="space-y-1 absolute right-5 z-50 cursor-pointer lg:hidden"
+        >
+          <div class="w-6 h-0.5 bg-white line line1"></div>
+          <div class="w-6 h-0.5 bg-white line line2"></div>
+          <div class="w-6 h-0.5 bg-white line line3"></div>
+        </div>
+      </header>
+
+      <!-- Sidebar (Mobile) -->
+      <aside
+        id="mobileMenu"
+        class="fixed top-0 left-0 w-full h-full bg-[#1a1a1a] transform -translate-x-full transition-transform duration-300"
+      >
+        <div class="p-6">
+          <div class="pb-5">
+            <img src="./assets/img/mobilelogo.png" alt="" />
+          </div>
+          <hr class="border-[1px] border-[#252323]" />
+          <ul class="space-y-8 pt-5">
+            <li>
+              <a
+                href="#"
+                class="block hover:text-white flex items-center gap-4 text-white font-light"
+                ><img
+                  src="./assets/img/not.png"
+                  class="w-6"
+                  alt=""
+                />Conversations</a
+              >
+            </li>
+            <li>
+              <a
+                href="#"
+                class="block hover:text-white flex items-center gap-4 text-[#777777] font-light"
+                ><img
+                  src="./assets/img/mobilesaved.png"
+                  class="w-6"
+                  alt=""
+                />Saved Creators</a
+              >
+            </li>
+            <li>
+              <a
+                href="#"
+                class="block hover:text-white flex items-center gap-4 text-[#777777] font-light"
+                ><img
+                  src="./assets/img/mobileye.png"
+                  class="w-6"
+                  alt=""
+                />Discover Creators</a
+              >
+            </li>
+            <li>
+              <a
+                href="#"
+                class="block hover:text-white flex items-center gap-4 text-[#777777] font-light"
+                ><img
+                  src="./assets/img/mobilefeedback.png"
+                  class="w-6"
+                  alt=""
+                />Feedback</a
+              >
+            </li>
+            <li>
+              <a
+                href="#"
+                class="block hover:text-white flex items-center gap-4 text-[#777777] font-light"
+                ><img
+                  src="./assets/img/mobilebooke.png"
+                  class="w-6"
+                  alt=""
+                />Learn About Zaia</a
+              >
+            </li>
+            <li>
+              <a
+                href="#"
+                class="block hover:text-white flex items-center gap-4 text-[#777777] font-light"
+                ><img src="./assets/img/login.png" class="w-6" alt="" />Login /
+                Sign Up</a
+              >
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- Overlay -->
+      <!-- <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"></div> -->
+
+      <!-- Content -->
+      <aside class="w-full p-4 block lg:hidden my-4">
+        <h1 class="text-2xl xl:text-3xl mb-5 text-white">RECENT CHATS</h1>
+        <hr class="border-[1px] border-[#252323]" />
+        <a href="./mobile.html">
+          <button
+            class="bg-[#5A44E9] text-lg text-white w-full py-3 rounded-full font-semibold mb-4 flex items-center justify-center gap-5 mt-5"
+          >
+            New Chat
+            <img src="./assets/img/cht.png" alt="" />
+          </button>
+        </a>
+        <!-- From Uiverse.io by sudhucodes -->
+        <div
+          class="flex items-center border focus-within:border-indigo-500 transition duration-300 pr-3 py-3 gap-2 bg-transparent border-[#252323] rounded-full overflow-hidden"
+        >
+          <input
+            type="text"
+            placeholder="Search chats"
+            class="w-full h-full pl-4 outline-none placeholder-[#777777] text-sm bg-transparent"
+          />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            x="0px"
+            y="0px"
+            width="22"
+            height="22"
+            viewBox="0 0 30 30"
+            fill="#777777"
+          >
+            <path
+              d="M 13 3 C 7.4889971 3 3 7.4889971 3 13 C 3 18.511003 7.4889971 23 13 23 C 15.396508 23 17.597385 22.148986 19.322266 20.736328 L 25.292969 26.707031 A 1.0001 1.0001 0 1 0 26.707031 25.292969 L 20.736328 19.322266 C 22.148986 17.597385 23 15.396508 23 13 C 23 7.4889971 18.511003 3 13 3 z M 13 5 C 17.430123 5 21 8.5698774 21 13 C 21 17.430123 17.430123 21 13 21 C 8.5698774 21 5 17.430123 5 13 C 5 8.5698774 8.5698774 5 13 5 z"
+            ></path>
+          </svg>
+        </div>
+        <hr class="border-[1px] my-6 border-[#252323]" />
+
+        <div class="space-y-4 text-sm text-gray-300">
+          <input
+            type="text"
+            placeholder="Looking for funny creators…"
+            class="w-full h-full pl-4 outline-none placeholder-[#777777] text-sm bg-[#161617] border border-[#161617] py-3 rounded-full"
+          />
+
+          <input
+            type="text"
+            placeholder="Soft-spoken voice recs?"
+            class="w-full h-full pl-4 outline-none placeholder-[#777777] text-sm bg-[#161617] border border-[#161617] py-3 rounded-full"
+          />
+
+          <input
+            type="text"
+            placeholder="I like storytelling styles"
+            class="w-full h-full pl-4 outline-none placeholder-[#777777] text-sm bg-[#161617] border border-[#161617] py-3 rounded-full"
+          />
+        </div>
+      </aside>
+    </section>
+    <script>
+      const toggleBtn = document.getElementById("toggleBtn");
+      const mobileMenu = document.getElementById("mobileMenu");
+      const overlay = document.getElementById("overlay");
+
+      toggleBtn.addEventListener("click", () => {
+        toggleBtn.classList.toggle("toggle-active");
+        mobileMenu.classList.toggle("-translate-x-full");
+        overlay.classList.toggle("hidden");
+      });
+
+      overlay.addEventListener("click", () => {
+        toggleBtn.classList.remove("toggle-active");
+        mobileMenu.classList.add("-translate-x-full");
+        overlay.classList.add("hidden");
+      });
+    </script>
+   
+   
+   <script>
+      const sendBtn = document.getElementById("sendBtn");
+      const userInput = document.getElementById("userInput");
+      const chatBody = document.getElementById("chatBody");
+
+      sendBtn.addEventListener("click", fetchResponse);
+      userInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") fetchResponse();
+      });
+
+      async function fetchResponse() {
+        const fullQuery = userInput.value.trim();
+        if (!fullQuery) return;
+
+        const limitMatch = fullQuery.match(/(?:top|first|show)\s*(\d+)/i);
+        const limit = limitMatch ? parseInt(limitMatch[1]) : null;
+        const query = fullQuery.replace(/(?:top|first|show)\s*\d+/i, "").trim();
+
+        // User bubble
+        chatBody.innerHTML += `
+    <div class="flex justify-end">
+      <div class="bg-white text-black px-6 py-2 text-sm rounded-full max-w-xl">${fullQuery}</div>
+      <img src="./assets/img/profileimg.png" class="w-10 h-10 2xl:h-14 2xl:w-14 rounded-full ml-3" />
+    </div>
+  `;
+
+        // Typing bubble
+        chatBody.innerHTML += `
+    <div id="agentTyping" class="flex gap-3">
+      <img src="./assets/img/zcomment.png" class="w-10 h-10 2xl:h-14 2xl:w-14 rounded-full ml-3" />
+      <div class="bg-[#1E1E1E] text-[#777777] text-sm px-6 py-2 rounded-full max-w-3xl">
+        Searching for results...
+      </div>
+    </div>
+  `;
+
+        userInput.value = "";
+
+        try {
+          const res = await fetch(
+            `https://agent-kinkybunny.aag.systems/api/knowledge?query=${encodeURIComponent(query)}&category=top`,
+            {
+              method: "GET",
+              headers: {
+                accept: "application/json",
+                "x-api-key": "61597eab559ac4fb3b71242b7f88fe8c",
+              },
+            }
+          );
+
+          const data = await res.json();
+          const entries = data.entries || [];
+
+          document.getElementById("agentTyping")?.remove();
+
+          if (!entries.length) {
+            chatBody.innerHTML += `
+        <div class="flex gap-3">
+          <img src="./assets/img/zcomment.png" class="w-10 h-10 2xl:h-14 2xl:w-14 rounded-full ml-3" />
+          <div class="bg-[#1E1E1E] text-[#777777] text-sm px-6 py-2 rounded-full max-w-3xl">
+            No results found.
+          </div>
+        </div>
+      `;
+            return;
+          }
+
+          // Response intro
+          chatBody.innerHTML += `
+      <div class="flex gap-3">
+        <img src="./assets/img/zcomment.png" class="w-10 h-10 2xl:h-14 2xl:w-14 rounded-full ml-3" />
+        <div class="bg-[#1E1E1E] text-[#777777] text-sm px-6 py-2 rounded-full max-w-3xl">
+          Absolutely! Based on your vibe, here are a few creators I think you’ll like:
+        </div>
+      </div>
+    `;
+
+          const combinedContent = entries
+            .filter((e) => e.content && typeof e.content === "string")
+            .map((e) => e.content)
+            .join("\n\n");
+          renderProfiles(combinedContent, limit);
+        } catch (err) {
+          console.error(err);
+          document.getElementById("agentTyping")?.remove();
+          chatBody.innerHTML += `
+      <div class="text-red-500 text-sm">Error fetching response.</div>
+    `;
+        }
+      }
+
+      function renderProfiles(content, limit = null) {
+        const profileBlocks = content
+          .split(/\*\*Username:\*\*/)
+          .filter((b) => b.trim());
+
+        let html =
+          '<div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 px-6 lg:px-20">';
+
+        profileBlocks.forEach((block, index) => {
+          if (limit && index >= limit) return;
+
+          const username = block.match(/(.+?)\n/)?.[1]?.trim() || "Unknown";
+
+          const imageRaw =
+            block.match(/\*\*Image:\*\*\s*(.+)/i)?.[1]?.trim() || "";
+          const image = imageRaw.startsWith("http")
+            ? imageRaw
+            : "https://via.placeholder.com/300x200";
+
+          const link =
+            block
+              .match(/\*\*OnlyFans:\*\*\s*(https?:\/\/[^\s]+)/)?.[1]
+              ?.trim() || "#";
+          const bio =
+            block.match(/\*\*Bio:\*\*\s*([\s\S]*?)\n\*\*/)?.[1]?.trim() ||
+            "No bio available";
+          const tags =
+            block
+              .match(/\*\*Tags:\*\*\s*(.+)/)?.[1]
+              ?.split(",")
+              .map((t) => `#${t.trim()}`)
+              .join(" ") || "";
+
+          html += `
+      <div class="bg-[#161616] rounded-2xl p-4 space-y-2 min-w-[250px]">
+        <img src="${image}" class="rounded-xl w-full h-48 object-cover mb-4" />
+        <p><span class="text-[#777777]">Name:</span> <span class=" text-white">${username}</span></p>
+        <p><span class="text-[#777777]">Platform:</span> <span class="text-white">OnlyFans</span></p>
+        <p class="text-sm text-white mt-1"><span class="text-[#777777]">Tags:</span> ${tags}</p>
+        <div class="flex justify-between items-center pt-5">
+          <a href="${link}" target="_blank" class="bg-white text-black px-4 py-2 rounded-full font-semibold text-sm">View Profile</a>
+          <button class="bg-[#5A44E9] w-9 h-9 flex items-center justify-center rounded-full">
+            <i class="fa-solid fa-bookmark text-white"></i>
+          </button>
+        </div>
+      </div>
+    `;
+        });
+
+        html += "</div>";
+        chatBody.innerHTML += html;
+      }
+    </script>
+
+
+
+
+   
+    <script
+      src="https://kit.fontawesome.com/a2ada4947c.js"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
