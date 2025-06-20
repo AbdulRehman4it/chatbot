@@ -232,7 +232,7 @@
       </aside>
 
       <!-- Overlay -->
-      <!-- <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"></div> -->
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40"></div> 
 
       <!-- Content -->
       <aside class="w-full p-4 block lg:hidden my-4">
@@ -292,26 +292,9 @@
         </div>
       </aside>
     </section>
-    <script>
-      const toggleBtn = document.getElementById("toggleBtn");
-      const mobileMenu = document.getElementById("mobileMenu");
-      const overlay = document.getElementById("overlay");
-
-      toggleBtn.addEventListener("click", () => {
-        toggleBtn.classList.toggle("toggle-active");
-        mobileMenu.classList.toggle("-translate-x-full");
-        overlay.classList.toggle("hidden");
-      });
-
-      overlay.addEventListener("click", () => {
-        toggleBtn.classList.remove("toggle-active");
-        mobileMenu.classList.add("-translate-x-full");
-        overlay.classList.add("hidden");
-      });
-    </script>
+    
    
-   
-   <script>
+  <!-- <script>
       const sendBtn = document.getElementById("sendBtn");
       const userInput = document.getElementById("userInput");
       const chatBody = document.getElementById("chatBody");
@@ -454,9 +437,178 @@
         html += "</div>";
         chatBody.innerHTML += html;
       }
-    </script>
+    </script>  -->
+
+<script>
+  // Full script with:
+// - Mood-aware querying with fallback
+// - Trimmed bios
+// - Clickable tags to re-query
+// - Animated loader bubble
+
+const sendBtn = document.getElementById("sendBtn");
+const userInput = document.getElementById("userInput");
+const chatBody = document.getElementById("chatBody");
+
+sendBtn.addEventListener("click", fetchResponse);
+userInput.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") fetchResponse();
+});
+
+async function fetchResponse(fromTag = null) {
+  // Handle input safely
+  let fullQuery = typeof fromTag === "string" ? fromTag : userInput.value.trim();
+  if (!fullQuery) return;
+
+  // Optional: parse limit from prompt (e.g., "top 5 funny creators")
+  const limitMatch = fullQuery.match(/(\d+)/);
+  const limit = limitMatch ? parseInt(limitMatch[1]) : null;
+
+  // Try to detect human tone and convert to clearer API-friendly query
+let cleanedQuery = fullQuery;
+
+if (/naughty|horny|kinky/i.test(fullQuery)) {
+  cleanedQuery = "porn";
+} else if (/romantic|love/i.test(fullQuery)) {
+  cleanedQuery = "romantic creators";
+} else if (/funny|quirky|weird/i.test(fullQuery)) {
+  cleanedQuery = "funny and playful creators";
+} else if (/chill|calm|relaxed/i.test(fullQuery)) {
+  cleanedQuery = "relaxed creators";
+} else if (/adventurous|daring|bold/i.test(fullQuery)) {
+  cleanedQuery = "adventurous and bold creators";
+} else if (/mysterious|enigmatic|deep/i.test(fullQuery)) {
+  cleanedQuery = "mysterious storytelling creators";
+}
+
+// Remove things like "top 3", "show me 5", etc.
+const cleanedWithoutNumbers = cleanedQuery.replace(/(?:top|show|recommend|suggest|for)?\s*\d+/gi, "").trim();
+const primaryQuery = cleanedWithoutNumbers || cleanedQuery;
+
+// Log for debug
+console.log("📡 Sending API query:", primaryQuery, "| limit:", limit);
 
 
+  if (!fromTag) {
+    chatBody.innerHTML += `<div class="flex justify-end">
+      <div class="bg-white text-black px-6 py-2 text-sm rounded-full max-w-xl">${fullQuery}</div>
+      <img src="./assets/img/profileimg.png" class="w-10 h-10 rounded-full ml-3"/>
+    </div>`;
+  }
+
+  addTyping();
+  userInput.value = "";
+
+  async function fetchWithQuery(q) {
+    console.log("📡 Sending API query:", primaryQuery, "| limit:", limit);
+    const res = await fetch(
+      `https://agent-kinkybunny.aag.systems/api/knowledge?query=${encodeURIComponent(q)}&category=top`,
+      {
+        method: "GET",
+        headers: {
+          accept: "application/json",
+          "x-api-key": "61597eab559ac4fb3b71242b7f88fe8c",
+        },
+      }
+    );
+    return res.json();
+  }
+
+  try {
+  let result = await fetchWithQuery(primaryQuery);
+
+// Retry once with full original query if nothing found
+if (!result.entries?.length && primaryQuery !== fullQuery) {
+  console.warn("🔁 No results found. Retrying with original query...");
+  result = await fetchWithQuery(fullQuery);
+}
+    removeTyping();
+
+    if (!result.entries?.length) {
+      chatBody.innerHTML += `<div class="flex gap-3">
+        <img src="./assets/img/zcomment.png" class="w-10 h-10 rounded-full ml-3" />
+        <div class="bg-[#1E1E1E] text-[#777777] text-sm px-6 py-2 rounded-full max-w-3xl">
+          No results found.
+        </div>
+      </div>`;
+      return;
+    }
+
+    chatBody.innerHTML += `<div class="flex gap-3">
+      <img src="./assets/img/zcomment.png" class="w-10 h-10 rounded-full ml-3" />
+      <div class="bg-[#1E1E1E] text-[#777777] text-sm px-6 py-2 rounded-full max-w-3xl">
+        Got it! Here's what I found based on your vibe:
+      </div>
+    </div>`;
+
+    const combinedContent = result.entries
+      .filter((e) => typeof e.content === "string")
+      .map((e) => e.content)
+      .join("\n\n");
+
+    renderProfiles(combinedContent, limit);
+  } catch (err) {
+    removeTyping();
+    console.error(err);
+    chatBody.innerHTML += `<div class="text-red-500 text-sm">Error fetching response.</div>`;
+  }
+}
+
+function renderProfiles(content, limit = null) {
+  const profileBlocks = content.split(/\*\*Username:\*\*/).filter((b) => b.trim());
+  let html = '<div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 px-6 lg:px-20">';
+
+  profileBlocks.forEach((block, i) => {
+    if (limit && i >= limit) return;
+
+    const username = block.match(/(.+?)\n/)?.[1]?.trim() || "Unknown";
+    const imgRaw = block.match(/\*\*Image:\*\*\s*(.+)/i)?.[1]?.trim() || "";
+    const image = imgRaw.startsWith("http") ? imgRaw : "https://via.placeholder.com/300x200";
+    const link = block.match(/\*\*OnlyFans:\*\*\s*(https?:\/\/\S+)/)?.[1]?.trim() || "#";
+
+    let bio = block.match(/\*\*Bio:\*\*\s*([\s\S]*?)\n\*\*/)?.[1]?.trim() || "No bio available";
+    const words = bio.split(/\s+/);
+    bio = words.length > 20 ? words.slice(0, 20).join(" ") + "…" : bio;
+
+    const tagString = block.match(/\*\*Tags:\*\*\s*(.+)/)?.[1] || "";
+    const tags = tagString.split(",").map((t) => t.trim()).filter(Boolean);
+    const tagHtml = tags.map((t) => `<span onclick=\"fetchResponse('${t}')\" class=\"text-blue-400 cursor-pointer hover:underline\">#${t}</span>`).join(" ");
+
+    html += `<div class="bg-[#161616] rounded-2xl p-4 space-y-2 min-w-[250px]">
+      <img src="${image}" class="rounded-xl w-full h-48 object-cover mb-4" />
+      <p><span class="text-[#777777]">Name:</span> <span class="text-white">${username}</span></p>
+      <p><span class="text-[#777777]">Platform:</span> <span class="text-white">OnlyFans</span></p>
+      <p class="text-sm text-[#777777]">Bio:</p>
+      <p class="text-sm text-white italic">${bio}</p>
+      <p class="text-sm text-white mt-1"><span class="text-[#777777]">Tags:</span> ${tagHtml}</p>
+      <div class="flex justify-between items-center pt-5">
+        <a href="${link}" target="_blank" class="bg-white text-black px-4 py-2 rounded-full font-semibold text-sm">View Profile</a>
+        <button class="bg-[#5A44E9] w-9 h-9 flex items-center justify-center rounded-full">
+          <i class="fa-solid fa-bookmark text-white"></i>
+        </button>
+      </div>
+    </div>`;
+  });
+
+  html += "</div>";
+  chatBody.innerHTML += html;
+}
+
+function addTyping() {
+  chatBody.innerHTML += `
+    <div id="agentTyping" class="flex gap-3 animate-pulse">
+      <img src="./assets/img/zcomment.png" class="w-10 h-10 rounded-full ml-3" />
+      <div class="bg-[#1E1E1E] text-[#777777] text-sm px-6 py-2 rounded-full max-w-3xl">
+        Searching for results…
+      </div>
+    </div>`;
+}
+
+function removeTyping() {
+  document.getElementById("agentTyping")?.remove();
+}
+
+</script>
 
 
    
