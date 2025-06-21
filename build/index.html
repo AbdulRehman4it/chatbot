@@ -71,7 +71,8 @@
             <aside
               class="w-80 p-4 hidden md:block border my-4 mx-4 rounded-2xl border-[#252323]"
             >
-              <h1 class="text-2xl xl:text-3xl mb-5 text-white">RECENT CHATS</h1>
+            <a href="./contact.html">
+              <h1 class="text-2xl xl:text-3xl mb-5 text-white">RECENT CHATS</h1></a>
               <hr class="border-[1px] border-[#252323]" />
               <button
                 class="bg-[#5A44E9] text-lg text-white w-full py-3 rounded-full font-semibold mb-4 flex items-center justify-center gap-5 mt-5"
@@ -438,7 +439,7 @@
         chatBody.innerHTML += html;
       }
     </script>  -->
-
+<!-- 
 <script>
   // Full script with:
 // - Mood-aware querying with fallback
@@ -608,6 +609,81 @@ function removeTyping() {
   document.getElementById("agentTyping")?.remove();
 }
 
+</script> -->
+
+
+<script>
+const sendBtn = document.getElementById("sendBtn");
+const userInput = document.getElementById("userInput");
+const chatBody = document.getElementById("chatBody");
+
+sendBtn.addEventListener("click", fetchResponse);
+userInput.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") fetchResponse();
+});
+
+async function fetchResponse() {
+  const query = userInput.value.trim();
+  if (!query) return;
+
+  // Show user message
+  chatBody.innerHTML += `
+    <div class="flex justify-end">
+      <div class="bg-white text-black px-6 py-2 text-sm rounded-full max-w-xl">${query}</div>
+      <img src="./assets/img/profileimg.png" class="w-10 h-10 rounded-full ml-3" />
+    </div>
+  `;
+
+  addTyping();
+  userInput.value = "";
+
+  try {
+    const res = await fetch("https://agent-kinkybunny.aag.systems/api/agent", {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+        "x-api-key": "61597eab559ac4fb3b71242b7f88fe8c",
+      },
+    });
+
+    const data = await res.json();
+    removeTyping();
+
+    // Optional: display specific fields if needed
+    const message = data?.message || JSON.stringify(data, null, 2);
+
+    chatBody.innerHTML += `
+      <div class="flex gap-3">
+        <img src="./assets/img/zcomment.png" class="w-10 h-10 rounded-full ml-3" />
+        <div class="bg-[#1E1E1E] text-white text-sm px-6 py-2 rounded-2xl max-w-3xl whitespace-pre-line">
+          ${message}
+        </div>
+      </div>
+    `;
+
+  } catch (error) {
+    removeTyping();
+    console.error("❌ Error:", error);
+    chatBody.innerHTML += `
+      <div class="text-red-500 text-sm px-6">Error fetching response.</div>
+    `;
+  }
+}
+
+function addTyping() {
+  chatBody.innerHTML += `
+    <div id="agentTyping" class="flex gap-3 animate-pulse">
+      <img src="./assets/img/zcomment.png" class="w-10 h-10 rounded-full ml-3" />
+      <div class="bg-[#1E1E1E] text-[#777777] text-sm px-6 py-2 rounded-full max-w-3xl">
+        Thinking…
+      </div>
+    </div>
+  `;
+}
+
+function removeTyping() {
+  document.getElementById("agentTyping")?.remove();
+}
 </script>
 
 
