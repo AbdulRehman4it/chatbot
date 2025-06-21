@@ -383,13 +383,16 @@ async function sendPrompt(prompt) {
     }
 
     // If response contains profiles, parse and render
-    if (Array.isArray(data.response)) {
-      renderProfiles(data.response);
-    } else if (typeof data.response === "string") {
-      appendAgentMessage(data.response);
-    } else {
-      appendAgentMessage("⚠️ Unexpected response format.");
-    }
+if (typeof data.response === "string" && data.response.includes("Name:") && data.response.includes("Link:")) {
+  renderProfilesFromText(data.response);
+} else if (typeof data.response === "string") {
+  appendAgentMessage(data.response);
+} else if (Array.isArray(data.response)) {
+  renderProfiles(data.response); // (if you ever support array again)
+} else {
+  appendAgentMessage("⚠️ Unexpected response format.");
+}
+
   } catch (err) {
     removeTyping();
     console.error("❌ Error:", err);
@@ -397,60 +400,50 @@ async function sendPrompt(prompt) {
   }
 }
 
-function renderProfiles(profileBlocks) {
-  let html = '<div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 px-6 lg:px-20">';
+function renderProfilesFromText(text) {
+  const profilePattern = /Name:\s*(.+?)\s+Link:\s*(https?:\/\/[^\s]+)\s+Bio:\s*([\s\S]*?)(?:\s+Image:\s*(https?:\/\/[^\s]+))(?=\s+Name:|$)/g;
 
-  profileBlocks.forEach((block) => {
-    // Normalize line breaks
-    const lines = block.split('\n').map(line => line.trim()).filter(Boolean);
+  const profiles = [];
+  let match;
 
-    let name = "Unknown";
-    let link = "#";
-    let image = "https://via.placeholder.com/300x200";
-    let bio = "No bio available";
-    let tags = [];
+  while ((match = profilePattern.exec(text)) !== null) {
+    const name = match[1]?.trim() || "Unknown";
+    const link = match[2]?.trim() || "#";
+    let bio = match[3]?.trim() || "No bio available";
+    const image = match[4]?.trim() || "https://via.placeholder.com/300x200";
 
-    lines.forEach(line => {
-      if (line.startsWith("Name:")) {
-        name = line.replace("Name:", "").trim();
-      } else if (line.startsWith("**OnlyFans Profile URL:**")) {
-        const match = line.match(/https?:\/\/[^\s]+/);
-        if (match) link = match[0];
-      } else if (line.startsWith("**Image:**")) {
-        const match = line.match(/https?:\/\/[^\s]+/);
-        if (match) image = match[0];
-      } else if (line.startsWith("**Bio:**")) {
-        bio = line.replace("**Bio:**", "").trim();
-      } else if (line.startsWith("**Tags:**")) {
-        const tagMatch = line.match(/\[([^\]]+)\]/);
-        if (tagMatch) {
-          tags = tagMatch[1].split(",").map(t => `#${t.trim()}`);
-        }
-      }
-    });
-
-    // Trim bio to 20 words max
-    const bioWords = bio.split(/\s+/);
-    if (bioWords.length > 20) {
-      bio = bioWords.slice(0, 20).join(" ") + "…";
+    if (bio.split(/\s+/).length > 25) {
+      bio = bio.split(/\s+/).slice(0, 25).join(" ") + "…";
     }
 
-    html += `<div class="bg-[#161616] rounded-2xl p-4 space-y-2 min-w-[250px]">
-      <img src="${image}" class="rounded-xl w-full h-48 object-cover mb-4" />
-      <p><span class="text-[#777777]">Name:</span> <span class="text-white">${name}</span></p>
-      <p><span class="text-[#777777]">Platform:</span> <span class="text-white">OnlyFans</span></p>
-      <p class="text-sm text-[#777777]">Bio:</p>
-      <p class="text-sm text-white italic">${bio}</p>
-      <p class="text-sm text-white mt-1"><span class="text-[#777777]">Tags:</span> ${tags.join(" ")}</p>
-      <div class="flex justify-between items-center pt-5">
-        <a href="${link}" target="_blank" class="bg-white text-black px-4 py-2 rounded-full font-semibold text-sm">View Profile</a>
-      </div>
-    </div>`;
+    profiles.push({ name, link, bio, image });
+  }
+
+  if (!profiles.length) {
+    appendAgentMessage("😶 Couldn't format any valid profiles.");
+    return;
+  }
+
+  let html = '<div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 px-6 lg:px-20">';
+  profiles.forEach((p) => {
+    html += `
+      <div class="bg-[#161616] rounded-2xl p-4 space-y-2 min-w-[250px]">
+        <img src="${p.image}" class="rounded-xl w-full h-48 object-cover mb-4" />
+        <p><span class="text-[#777777]">Name:</span> <span class="text-white">${p.name}</span></p>
+        <p><span class="text-[#777777]">Platform:</span> <span class="text-white">OnlyFans</span></p>
+        <p class="text-sm text-[#777777]">Bio:</p>
+        <p class="text-sm text-white italic">${p.bio}</p>
+        <div class="flex justify-between items-center pt-5">
+          <a href="${p.link}" target="_blank" class="bg-white text-black px-4 py-2 rounded-full font-semibold text-sm">View Profile</a>
+        </div>
+      </div>`;
   });
 
   html += "</div>";
   chatBody.innerHTML += html;
 }
+
+
 
 </script>
 
