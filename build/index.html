@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="./assets/css/style.css" />
+    <style>
+      #chatBody {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+}
+
+#chatBody::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+    </style>
   </head>
   <body class="bg-[#0E0E0F]">
     <section class="lg:block hidden">
@@ -217,6 +227,10 @@
       });
     </script>
    <script>
+    function scrollToBottom() {
+  const chat = document.getElementById("chatBody");
+  chat.scrollTop = chat.scrollHeight;
+}
 const sendBtn = document.getElementById("sendBtn");
 const userInput = document.getElementById("userInput");
 const chatBody = document.getElementById("chatBody");
@@ -240,6 +254,7 @@ function appendUserMessage(msg) {
     <div class="bg-white text-black px-6 py-2 text-sm rounded-full max-w-xl">${msg}</div>
     <img src="./assets/img/zcomment.png" class="w-10 h-10 rounded-full ml-3"/>
   </div>`;
+   scrollToBottom();
 }
 
 function appendAgentMessage(msg) {
@@ -247,6 +262,7 @@ function appendAgentMessage(msg) {
     <img src="./assets/img/zaia.png" class="w-10 h-10 rounded-full ml-3" />
     <div class="bg-[#1E1E1E] text-[#777777] text-sm px-6 py-2 rounded-full max-w-3xl">${msg}</div>
   </div>`;
+   scrollToBottom();
 }
 
 function addTyping() {
@@ -257,6 +273,7 @@ function addTyping() {
         Thinking...
       </div>
     </div>`;
+     scrollToBottom();
 }
 
 function removeTyping() {
@@ -447,6 +464,21 @@ function renderProfileCards(profiles) {
     });
   });
 </script>
-
+<div id="disclaimerBar" class="fixed bottom-0 left-0 w-full z-40 bg-[#1A1A1A] text-xs text-[#777777] px-6 py-4 flex flex-col items-center md:flex-row md:justify-between gap-3">
+  <p class="text-center md:text-left leading-relaxed">
+    Zaia is a product of <span class="text-white font-semibold">KinkyBunny</span>. It is not affiliated with, endorsed by, or connected to platforms like 
+    <span class="text-white">OnlyFans</span>, <span class="text-white">Fansly</span>, or <span class="text-white">MyM</span>. Zaia recommends real creator profiles from publicly available data, but does not host or monetize third-party content.<br class="block md:hidden">
+    By using Zaia, you agree to 
+    <a href="https://kinkybunny.com/privacy-policies/" class="text-white underline hover:text-[#5A44E9]">KinkyBunny’s Terms and Conditions</a>.
+  </p>
+  <button id="closeDisclaimer" class="text-white text-lg hover:text-[#5A44E9] self-end md:self-center">
+    &times;
+  </button>
+</div>
+<script>
+  document.getElementById("closeDisclaimer").addEventListener("click", () => {
+    document.getElementById("disclaimerBar").style.display = "none";
+  });
+</script>
   </body>
 </html>
