@@ -84,16 +84,10 @@
               <!-- From Uiverse.io by sudhucodes -->
             </aside>
 <script>
-  document.getElementById("newChatBtn").addEventListener("click", function () {
-    const chatBody = document.getElementById("chatBody");
-    chatBody.innerHTML = `
-      <div class="flex gap-3">
-        <img src="./assets/img/zaia.png" class="w-10 h-10 rounded-full ml-3" />
-        <div class="bg-[#1E1E1E] text-[#777777] text-sm px-6 py-2 rounded-full max-w-3xl">
-          👋 Welcome! Feel free to ask me anything.
-        </div>
-      </div>`;
-  });
+document.getElementById("newChatBtn").addEventListener("click", function () {
+  chatBody.innerHTML = "";
+  fetchGreetingFromAPI();
+});
 </script>
             <!-- Main Chat Section (Placeholder) -->
 <main class="flex flex-col h-[calc(100vh-80px)] w-full border border-[#252323] my-4 rounded-2xl 2xl:mr-10 md:mr-5 bg-[#0E0E0E]">
@@ -401,6 +395,36 @@ function renderProfileCards(profiles) {
   html += "</div>";
   chatBody.innerHTML += html;
 }
+async function fetchGreetingFromAPI() {
+  const sessionId = generateUUID();
+  try {
+    const res = await fetch("https://agent-kinkybunny.aag.systems/api/interact", {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "x-api-key": "61597eab559ac4fb3b71242b7f88fe8c",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        agentId,
+        userId,
+        sessionId,
+        prompt: "__WELCOME__" // ✅ Replace with correct trigger if needed
+      }),
+    });
+
+    const data = await res.json();
+    if (data && data.response) {
+      appendAgentMessage(data.response);
+    } else {
+      appendAgentMessage("⚠️ No greeting received.");
+    }
+  } catch (err) {
+    console.error("❌ Greeting API error:", err);
+    appendAgentMessage("⚠️ Failed to load greeting.");
+  }
+}
+
 </script>
 <script
       src="https://kit.fontawesome.com/a2ada4947c.js"
@@ -450,17 +474,11 @@ function renderProfileCards(profiles) {
     const confirmAgeBtn = document.getElementById("confirmAgeBtn");
     const exitBtn = document.getElementById("exitBtn");
     const chatBody = document.getElementById("chatBody");
-
-    confirmAgeBtn.addEventListener("click", () => {
-      agePopup.style.display = "none";
-      chatBody.innerHTML += `
-        <div class="flex gap-3">
-          <img src="./assets/img/zaia.png" class="w-10 h-10 rounded-full ml-3" />
-          <div class="bg-[#1E1E1E] text-[#777777] text-sm px-6 py-2 rounded-full max-w-3xl">
-            👋 Welcome! Feel free to ask me anything.
-          </div>
-        </div>`;
-    });
+confirmAgeBtn.addEventListener("click", () => {
+  agePopup.style.display = "none";
+  chatBody.innerHTML = ""; // clear chat
+  fetchGreetingFromAPI();
+});
 
     exitBtn.addEventListener("click", () => {
       window.location.href = "https://kinkybunny.com/"; // or your exit route
