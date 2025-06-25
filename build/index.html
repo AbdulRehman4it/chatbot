@@ -96,7 +96,7 @@ document.getElementById("newChatBtn").addEventListener("click", function () {
   <div class="p-6">
     <div class="flex justify-between items-center">
       <div class="flex items-center gap-4 rounded-full">
-        <img src="./assets/img/zaia.png" class="2xl:w-20 2xl:h-20 h-14 w-14 rounded-full" alt="" />
+        <img src="./assets/img/zaia.jpg" class="2xl:w-20 2xl:h-20 h-14 w-14 rounded-full" alt="" />
         <div>
           <h1 class="text-white text-2xl">Z.A.I.A</h1>
           <p class="text-sm text-[#777777]">Zero Artificial Intimacy Agent</p>
@@ -256,7 +256,7 @@ function appendUserMessage(msg) {
 
 function appendAgentMessage(msg) {
   chatBody.innerHTML += `<div class="flex gap-3">
-    <img src="./assets/img/zaia.png" class="w-10 h-10 rounded-full ml-3" />
+    <img src="./assets/img/zaia.jpg" class="w-10 h-10 rounded-full ml-3" />
     <div class="bg-[#1E1E1E] text-[#777777] text-sm px-6 py-2 rounded-full max-w-3xl">${msg}</div>
   </div>`;
    scrollToBottom();
@@ -265,7 +265,7 @@ function appendAgentMessage(msg) {
 function addTyping() {
   chatBody.innerHTML += `
     <div id="agentTyping" class="flex gap-3 animate-pulse">
-      <img src="./assets/img/zaia.png" class="w-10 h-10 rounded-full ml-3" />
+      <img src="./assets/img/zaia.jpg" class="w-10 h-10 rounded-full ml-3" />
       <div class="bg-[#1E1E1E] text-[#777777] text-sm px-6 py-2 rounded-full max-w-3xl">
         Thinking...
       </div>
