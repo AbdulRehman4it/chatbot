@@ -334,7 +334,7 @@ async function sendPrompt(prompt) {
 }
 
 function renderProfilesFromText(text) {
-  const profilePattern = /Name:\s*(.+?)\s+Link:\s*(https?:\/\/[^\s]+)\s+Bio:\s*([\s\S]*?)(?:\s+Image:\s*(https?:\/\/[^\s]+))(?=\s+Name:|$)/g;
+  const profilePattern = /Name:\s*(.+?)\s+Link:\s*(https?:\/\/[^\s]+)\s+Bio:\s*([\s\S]*?)(?:\s+Image:\s*(https?:\/\/[^\s]+))?(?=\s+Name:|$)/g;
   const profiles = [];
   let match;
 
@@ -349,7 +349,7 @@ const tagPattern = /\b(joi|feet|dom|sub|dildo|cum|porn|sexting|hucow|latex|fetis
 const tags = bio.match(tagPattern) || [];
     const image = match[4]?.trim() || "https://via.placeholder.com/300x200";
     if (bio.split(/\s+/).length > 25) bio = bio.split(/\s+/).slice(0, 25).join(" ") + "…";
-    profiles.push({ name, link, bio, image });
+    profiles.push({ name, link, bio, image, tags });
   }
 
   if (!profiles.length) {
