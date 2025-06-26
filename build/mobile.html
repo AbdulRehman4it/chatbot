@@ -44,102 +44,224 @@
 
 
   <script src="https://kit.fontawesome.com/a2ada4947c.js" crossorigin="anonymous"></script>
-  <script>
-  
-    // --- Chatbot Logic ---
-    const sendBtn = document.getElementById("sendBtn");
-    const userInput = document.getElementById("userInput");
-    const chatBody = document.getElementById("chatBody");
+   <script>
+    function scrollToBottom() {
+  const chat = document.getElementById("chatBody");
+  chat.scrollTop = chat.scrollHeight;
+}
+const sendBtn = document.getElementById("sendBtn");
+const userInput = document.getElementById("userInput");
+const chatBody = document.getElementById("chatBody");
 
-    const agentId = "1acefbf8-6b7c-4ef9-af9e-32dc00029a48";
-    const userId = "802588d7-6079-404f-b8fd-444cc614ff73";
+const agentId = "1acefbf8-6b7c-4ef9-af9e-32dc00029a48";
+const userId = "802588d7-6079-404f-b8fd-444cc614ff73";
 
-    sendBtn.addEventListener("click", () => sendPrompt(userInput.value));
-    userInput.addEventListener("keypress", (e) => {
-      if (e.key === "Enter") sendPrompt(userInput.value);
+sendBtn.addEventListener("click", () => sendPrompt(userInput.value));
+userInput.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") sendPrompt(userInput.value);
+});
+
+function generateUUID() {
+  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+  );
+}
+
+function appendUserMessage(msg) {
+  chatBody.innerHTML += `<div class="flex justify-end">
+    <div class="bg-white text-black px-6 py-2 text-sm rounded-full max-w-xl">${msg}</div>
+    <img src="./assets/img/zcomment.png" class="w-10 h-10 rounded-full ml-3"/>
+  </div>`;
+   scrollToBottom();
+}
+
+function appendAgentMessage(msg) {
+  chatBody.innerHTML += `<div class="flex gap-3">
+    <img src="./assets/img/zaia.jpg" class="w-10 h-10 rounded-full ml-3" />
+    <div class="bg-[#1E1E1E] text-[#777777] text-sm px-6 py-2 rounded-full max-w-3xl">${msg}</div>
+  </div>`;
+   scrollToBottom();
+}
+
+function addTyping() {
+  chatBody.innerHTML += `
+    <div id="agentTyping" class="flex gap-3 animate-pulse">
+      <img src="./assets/img/zaia.jpg" class="w-10 h-10 rounded-full ml-3" />
+      <div class="bg-[#1E1E1E] text-[#777777] text-sm px-6 py-2 rounded-full max-w-3xl">
+        Thinking...
+      </div>
+    </div>`;
+     scrollToBottom();
+}
+
+function removeTyping() {
+  document.getElementById("agentTyping")?.remove();
+}
+
+async function sendPrompt(prompt) {
+  const cleaned = prompt.trim();
+  if (!cleaned) return;
+
+  appendUserMessage(cleaned);
+  userInput.value = "";
+  addTyping();
+
+  const sessionId = generateUUID();
+
+  try {
+    const res = await fetch("https://agent-kinkybunny.aag.systems/api/interact", {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "x-api-key": "61597eab559ac4fb3b71242b7f88fe8c",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        agentId,
+        userId,
+        sessionId,
+        prompt: cleaned,
+      }),
     });
 
-    function generateUUID() {
-      return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-        (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-      );
+    const data = await res.json();
+    removeTyping();
+
+    if (!data || !data.response) {
+      appendAgentMessage("⚠️ No response from ZAIA. Try again.");
+      return;
     }
 
-    function appendUserMessage(msg) {
-      chatBody.innerHTML += `
-        <div class="flex justify-end">
-          <div class="bg-white text-black px-6 py-2 text-sm rounded-full max-w-xs">${msg}</div>
-          <img src="./assets/img/zcomment.png" class="w-10 h-10 rounded-full ml-3" />
-        </div>`;
-      chatBody.scrollTop = chatBody.scrollHeight;
-    }
-
-    function appendAgentMessage(msg) {
-      chatBody.innerHTML += `
-        <div class="flex gap-3 py-5">
-          <img src="./assets/img/zaia.png" class="w-10 h-10 rounded-full ml-3" />
-          <div class="bg-[#1E1E1E] text-[#777777] text-sm px-6 py-2 rounded-full max-w-xs">${msg}</div>
-        </div>`;
-      chatBody.scrollTop = chatBody.scrollHeight;
-    }
-
-    function addTyping() {
-      chatBody.innerHTML += `
-        <div id="agentTyping" class="flex gap-3 animate-pulse">
-          <img src="./assets/img/zaia.png" class="w-10 h-10 rounded-full ml-3" />
-          <div class="bg-[#1E1E1E] text-[#777777] text-sm px-6 py-2 rounded-full max-w-xs">Thinking...</div>
-        </div>`;
-      chatBody.scrollTop = chatBody.scrollHeight;
-    }
-
-    function removeTyping() {
-      document.getElementById("agentTyping")?.remove();
-    }
-
-    async function sendPrompt(prompt) {
-      const cleaned = prompt.trim();
-      if (!cleaned) return;
-      appendUserMessage(cleaned);
-      userInput.value = "";
-      addTyping();
-
-      const sessionId = generateUUID();
-      try {
-        const res = await fetch("https://agent-kinkybunny.aag.systems/api/interact", {
-          method: "POST",
-          headers: {
-            accept: "application/json",
-            "x-api-key": "61597eab559ac4fb3b71242b7f88fe8c",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            agentId,
-            userId,
-            sessionId,
-            prompt: cleaned,
-          }),
-        });
-
-        const data = await res.json();
-        removeTyping();
-
-        if (!data || !data.response) {
-          appendAgentMessage("⚠️ No response from ZAIA. Try again.");
-          return;
-        }
-
-        if (typeof data.response === "string") {
-          appendAgentMessage(data.response);
-        } else {
-          appendAgentMessage("⚠️ Unexpected response format.");
-        }
-      } catch (err) {
-        removeTyping();
-        appendAgentMessage("Oops, something went wrong 😬");
-        console.error("❌ Error:", err);
+    // Response handling logic
+    const resp = data.response;
+    if (typeof resp === "string") {
+      if (resp.includes("Name:") && resp.includes("Link:")) {
+        renderProfilesFromText(resp);
+      } else if (resp.includes("onlyfans.com")) {
+        renderProfilesFromLooseText(resp);
+      } else {
+        appendAgentMessage(resp);
       }
+    } else if (Array.isArray(resp)) {
+      renderProfiles(resp);
+    } else {
+      appendAgentMessage("⚠️ Unexpected response format.");
     }
-  </script>
+  } catch (err) {
+    removeTyping();
+    console.error("❌ Error:", err);
+    appendAgentMessage("Oops, something went wrong 😬");
+  }
+}
+
+function renderProfilesFromText(text) {
+  const profilePattern = /Name:\s*(.+?)\s+Link:\s*(https?:\/\/[^\s]+)\s+Bio:\s*([\s\S]*?)(?:\s+Image:\s*(https?:\/\/[^\s]+))?(?=\s+Name:|$)/g;
+  const profiles = [];
+  let match;
+
+  while ((match = profilePattern.exec(text)) !== null) {
+    const name = match[1]?.trim() || "Unknown";
+    const link = match[2]?.trim() || "#";
+    let bio = match[3]?.replace(/Image:\s*https?:\/\/\S+/gi, '').trim() || "No bio available";
+if (bio.split(/\s+/).length > 25) {
+  bio = bio.split(/\s+/).slice(0, 25).join(" ") + "…";
+}
+const tagPattern = /\b(joi|feet|dom|sub|dildo|cum|porn|sexting|hucow|latex|fetish|milf|daddy|solo|orgy|anal|bdsm|kink|blowjob|threesome|toys|nude|rated|wet|lesbian|gay|girl-on-girl|cock|pussy|masturbat(e|ion)|onlyfans)\b/gi;
+const tags = bio.match(tagPattern) || [];
+    const image = match[4]?.trim() || "https://via.placeholder.com/300x200";
+    if (bio.split(/\s+/).length > 25) bio = bio.split(/\s+/).slice(0, 25).join(" ") + "…";
+    profiles.push({ name, link, bio, image, tags });
+  }
+
+  if (!profiles.length) {
+    appendAgentMessage("😶 Couldn't format any valid profiles.");
+    return;
+  }
+
+  renderProfileCards(profiles);
+}
+
+function renderProfilesFromLooseText(text) {
+  const profilePattern = /([\w\s💞🍒🌍🖤🥵🥰😇]+)\s+(https:\/\/onlyfans\.com\/[^\s]+)\s+([^]+?)(?=\s+\w+\s+https:\/\/onlyfans\.com\/|$)/g;
+  const profiles = [];
+  let match;
+
+  while ((match = profilePattern.exec(text)) !== null) {
+    const name = match[1]?.trim() || "Unknown";
+    const link = match[2]?.trim() || "#";
+    let bio = match[3]?.replace(/Image:\s*https?:\/\/\S+/gi, '').trim() || "No bio available";
+if (bio.split(/\s+/).length > 25) {
+  bio = bio.split(/\s+/).slice(0, 25).join(" ") + "…";
+}
+const tagPattern = /\b(joi|feet|dom|sub|dildo|cum|porn|sexting|hucow|latex|fetish|milf|daddy|solo|orgy|anal|bdsm|kink|blowjob|threesome|toys|nude|rated|wet|lesbian|gay|girl-on-girl|cock|pussy|masturbat(e|ion)|onlyfans)\b/gi;
+const tags = bio.match(tagPattern) || [];
+    const image = "https://via.placeholder.com/300x200";
+    if (bio.split(/\s+/).length > 25) bio = bio.split(/\s+/).slice(0, 25).join(" ") + "…";
+    profiles.push({ name, link, bio, image });
+  }
+
+  if (!profiles.length) {
+    appendAgentMessage("😶 Couldn't extract any creator profiles.");
+    return;
+  }
+
+  renderProfileCards(profiles);
+}
+
+function renderProfileCards(profiles) {
+  let html = '<div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 px-6 lg:px-20">';
+  profiles.forEach((p) => {
+    html += `
+      <div class="bg-[#161616] rounded-2xl p-4 space-y-2 min-w-[250px]">
+        <img src="${p.image}" class="rounded-xl w-full h-48 object-cover mb-4" />
+        <p><span class="text-[#777777]">Name:</span> <span class="text-white">${p.name}</span></p>
+        <p><span class="text-[#777777]">Platform:</span> <span class="text-white">OnlyFans</span></p>
+        <p class="text-sm text-[#777777]">Bio:</p>
+        <p class="text-sm text-white italic">${p.bio}</p>
+        ${p.tags?.length ? `
+  <div class="flex flex-wrap gap-2 pt-2">
+    ${p.tags.map(tag => `<span class="text-xs bg-[#5A44E9] text-white px-3 py-1 rounded-full">${tag}</span>`).join('')}
+  </div>` : ''}
+        <div class="flex justify-between items-center pt-5">
+          <a href="${p.link}" target="_blank" class="bg-white text-black px-4 py-2 rounded-full font-semibold text-sm">View Profile</a>
+        </div>
+      </div>`;
+  });
+  html += "</div>";
+  chatBody.innerHTML += html;
+}
+
+async function fetchGreetingFromAPI() {
+  const sessionId = generateUUID();
+  try {
+    const res = await fetch("https://agent-kinkybunny.aag.systems/api/interact", {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        "x-api-key": "61597eab559ac4fb3b71242b7f88fe8c",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        agentId,
+        userId,
+        sessionId,
+        prompt: "hi" // ✅ Replace with correct trigger if needed
+      }),
+    });
+
+    const data = await res.json();
+    if (data && data.response) {
+      appendAgentMessage(data.response);
+    } else {
+      appendAgentMessage("⚠️ No greeting received.");
+    }
+  } catch (err) {
+    console.error("❌ Greeting API error:", err);
+    appendAgentMessage("⚠️ Failed to load greeting.");
+  }
+}
+
+</script>
 </body>
 
 </html>
