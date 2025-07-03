@@ -223,7 +223,11 @@ document.getElementById("newChatBtn").addEventListener("click", function () {
         overlay.classList.add("hidden");
       });
     </script>
-   <script>
+
+
+
+
+   <!-- <script>
     function scrollToBottom() {
   const chat = document.getElementById("chatBody");
   chat.scrollTop = chat.scrollHeight;
@@ -413,7 +417,7 @@ function renderProfileCards(profiles) {
 async function fetchGreetingFromAPI() {
   const sessionId = generateUUID();
   try {
-    const res = await fetch("https://agent-kinkybunny.aag.systems/api/interact", {
+    const res = await fetch("https://agent-kinkybunny.aag.systems/api-docs/#/Interact/post_api_interact", {
       method: "POST",
       headers: {
         accept: "application/json",
@@ -424,7 +428,7 @@ async function fetchGreetingFromAPI() {
         agentId,
         userId,
         sessionId,
-        prompt: "hi" // ✅ Replace with correct trigger if needed
+        prompt: "hi" 
       }),
     });
 
@@ -440,7 +444,7 @@ async function fetchGreetingFromAPI() {
   }
 }
 
-</script>
+</script> -->
 <script
       src="https://kit.fontawesome.com/a2ada4947c.js"
       crossorigin="anonymous"

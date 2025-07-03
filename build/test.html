@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Simple Chat</title>
+</head>
+<body>
+  <input id="userInput" type="text" placeholder="Type something..." />
+  <button id="sendBtn">Send</button>
+  <div id="chatBody" style="margin-top: 20px; font-family: sans-serif;"></div>
+
+  <script>
+    // Generate UUID
+    function generateUUID() {
+      return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+        (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+      );
+    }
+
+    // Cookie helpers
+    function getCookie(name) {
+      const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
+      return match ? decodeURIComponent(match[2]) : null;
+    }
+
+    function setCookie(name, value) {
+      document.cookie = `${name}=${value}; path=/; max-age=31536000`; // 1 year
+    }
+
+    function ensureCookie(name, generatorFn) {
+      if (!getCookie(name)) {
+        setCookie(name, generatorFn());
+      }
+    }
+
+    // Ensure userId and sessionId
+    ensureCookie("userId", () => "guest-" + generateUUID());
+    ensureCookie("sessionId", generateUUID);
+
+    // API constants
+    const agentId = "1acefbf8-6b7c-4ef9-af9e-32dc00029a48";
+    const apiKey = "61597eab559ac4fb3b71242b7f88fe8c";
+
+    // DOM elements
+    const userInput = document.getElementById("userInput");
+    const sendBtn = document.getElementById("sendBtn");
+    const chatBody = document.getElementById("chatBody");
+
+    async function sendPrompt(prompt) {
+      const cleaned = prompt.trim();
+      if (!cleaned) return;
+
+      const userId = getCookie("userId");
+      const sessionId = getCookie("sessionId");
+
+      if (!userId || !sessionId) {
+        chatBody.innerText = "❌ Missing userId or sessionId.";
+        return;
+      }
+
+      chatBody.innerText = "⏳ Sending...";
+
+      try {
+        const res = await fetch("https://agent-kinkybunny.aag.systems/api/interact", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": apiKey,
+            "accept": "application/json",
+          },
+          body: JSON.stringify({
+            agentId,
+            userId,
+            sessionId,
+            prompt: cleaned,
+          }),
+        });
+
+        const data = await res.json();
+        chatBody.innerText = data?.response || "⚠️ No response from API.";
+      } catch (error) {
+        chatBody.innerText = "❌ Error: " + error.message;
+        console.error("Request error:", error);
+      }
+    }
+
+    sendBtn.addEventListener("click", () => {
+      sendPrompt(userInput.value);
+      userInput.value = "";
+    });
+
+    userInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        sendPrompt(userInput.value);
+        userInput.value = "";
+      }
+    });
+  </script>
+</body>
+</html>
