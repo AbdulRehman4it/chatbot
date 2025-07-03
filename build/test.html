@@ -42,8 +42,7 @@
     const userInput = document.getElementById("userInput");
     const sendBtn = document.getElementById("sendBtn");
     const chatBody = document.getElementById("chatBody");
-
-    async function sendPrompt(prompt) {
+async function sendPrompt(prompt) {
   const cleaned = prompt.trim();
   if (!cleaned) return;
 

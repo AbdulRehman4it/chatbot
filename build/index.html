@@ -227,7 +227,7 @@ document.getElementById("newChatBtn").addEventListener("click", function () {
 
 
 
-   <!-- <script>
+   <script>
     function scrollToBottom() {
   const chat = document.getElementById("chatBody");
   chat.scrollTop = chat.scrollHeight;
@@ -237,18 +237,40 @@ const userInput = document.getElementById("userInput");
 const chatBody = document.getElementById("chatBody");
 
 const agentId = "1acefbf8-6b7c-4ef9-af9e-32dc00029a48";
-const userId = "802588d7-6079-404f-b8fd-444cc614ff73";
+
 
 sendBtn.addEventListener("click", () => sendPrompt(userInput.value));
 userInput.addEventListener("keypress", (e) => {
   if (e.key === "Enter") sendPrompt(userInput.value);
 });
 
+// Generate UUID
 function generateUUID() {
   return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
     (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
   );
 }
+
+// Cookie helpers
+function getCookie(name) {
+  const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
+  return match ? decodeURIComponent(match[2]) : null;
+}
+
+function setCookie(name, value) {
+  document.cookie = `${name}=${value}; path=/; max-age=31536000`; // 1 year
+}
+
+function ensureCookie(name, generatorFn) {
+  if (!getCookie(name)) {
+    setCookie(name, generatorFn());
+  }
+}
+
+// Ensure userId and sessionId
+ensureCookie("userId", () => "guest-" + generateUUID());
+ensureCookie("sessionId", () => generateUUID());
+
 
 function appendUserMessage(msg) {
   chatBody.innerHTML += `<div class="flex justify-end">
@@ -281,6 +303,8 @@ function removeTyping() {
   document.getElementById("agentTyping")?.remove();
 }
 
+
+
 async function sendPrompt(prompt) {
   const cleaned = prompt.trim();
   if (!cleaned) return;
@@ -289,14 +313,19 @@ async function sendPrompt(prompt) {
   userInput.value = "";
   addTyping();
 
-  const sessionId = generateUUID();
+  const userId = getCookie("userId");
+  const sessionId = getCookie("sessionId");
+
+  if (!userId || !sessionId) {
+    removeTyping();
+    appendAgentMessage("⚠️ Missing userId or sessionId in cookies.");
+    return;
+  }
 
   try {
-    const res = await fetch("https://agent-kinkybunny.aag.systems/api/interact", {
+    const res = await fetch("proxy.php", {
       method: "POST",
       headers: {
-        accept: "application/json",
-        "x-api-key": "61597eab559ac4fb3b71242b7f88fe8c",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -307,6 +336,11 @@ async function sendPrompt(prompt) {
       }),
     });
 
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`HTTP error ${res.status}: ${text}`);
+    }
+
     const data = await res.json();
     removeTyping();
 
@@ -315,7 +349,6 @@ async function sendPrompt(prompt) {
       return;
     }
 
-    // Response handling logic
     const resp = data.response;
     if (typeof resp === "string") {
       if (resp.includes("Name:") && resp.includes("Link:")) {
@@ -336,6 +369,7 @@ async function sendPrompt(prompt) {
     appendAgentMessage("Oops, something went wrong 😬");
   }
 }
+
 
 function renderProfilesFromText(text) {
   const profilePattern = /Name:\s*(.+?)\s+Link:\s*(https?:\/\/[^\s]+)\s+Bio:\s*([\s\S]*?)(?:\s+Image:\s*(https?:\/\/[^\s]+))?(?=\s+Name:|$)/g;
@@ -444,7 +478,7 @@ async function fetchGreetingFromAPI() {
   }
 }
 
-</script> -->
+</script>
 <script
       src="https://kit.fontawesome.com/a2ada4947c.js"
       crossorigin="anonymous"
