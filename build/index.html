@@ -449,35 +449,37 @@ function renderProfileCards(profiles) {
 }
 
 async function fetchGreetingFromAPI() {
-  const sessionId = generateUUID();
-  try {
-    const res = await fetch("https://agent-kinkybunny.aag.systems/api-docs/#/Interact/post_api_interact", {
-      method: "POST",
-      headers: {
-        accept: "application/json",
-        "x-api-key": "61597eab559ac4fb3b71242b7f88fe8c",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        agentId,
-        userId,
-        sessionId,
-        prompt: "hi" 
-      }),
-    });
+  const greetings = [
+    "Hey sexy, ready for some fun?",
+    "Hello gorgeous, what’s on your naughty mind?",
+    "Hi babe, want to get a little wild?",
+    "Hey there, you look irresistible today!",
+    "Ready to play? I’m all yours.",
+    "Hello hottie, what’s your fantasy?",
+    "Hey cutie, let’s make this interesting.",
+    "Hi darling, craving some excitement?",
+    "Hey babe, I’m feeling a little naughty.",
+    "Hello sexy, let’s heat things up!",
+    "Hey you, wanna get a little dirty?",
+    "Hi love, ready to tease and please?",
+    "Hey there, let’s make some magic happen.",
+    "Hello beautiful, what’s your secret desire?",
+    "Hey hottie, I’m here to satisfy you.",
+    "Hi sexy, can I be your temptation?",
+    "Hey darling, let’s have some fun tonight.",
+    "Hello babe, ready to explore?",
+    "Hey cutie, I’m feeling naughty and nice.",
+    "Hi love, wanna get a little adventurous?"
+  ];
 
-    const data = await res.json();
-    if (data && data.response) {
-      appendAgentMessage(data.response);
-    } else {
-      appendAgentMessage("⚠️ No greeting received.");
-    }
-  } catch (err) {
-    console.error("❌ Greeting API error:", err);
-    appendAgentMessage("⚠️ Failed to load greeting.");
-  }
+  const randomIndex = Math.floor(Math.random() * greetings.length);
+  const randomGreeting = greetings[randomIndex];
+
+  // Optional tiny delay for async simulation
+  await new Promise(resolve => setTimeout(resolve, 100));
+
+  appendAgentMessage(randomGreeting);
 }
-
 </script>
 <script
       src="https://kit.fontawesome.com/a2ada4947c.js"
