@@ -44,39 +44,48 @@
     const chatBody = document.getElementById("chatBody");
 
     async function sendPrompt(prompt) {
-      const cleaned = prompt.trim();
-      if (!cleaned) return;
+  const cleaned = prompt.trim();
+  if (!cleaned) return;
 
-      const userId = getCookie("userId");
-      const sessionId = getCookie("sessionId");
+  const userId = getCookie("userId");
+  const sessionId = getCookie("sessionId");
 
-      if (!userId || !sessionId) {
-        chatBody.innerText = "❌ Missing userId or sessionId.";
-        return;
-      }
+  if (!userId || !sessionId) {
+    chatBody.innerText = "❌ Missing userId or sessionId.";
+    return;
+  }
 
-      chatBody.innerText = "⏳ Sending...";
+  chatBody.innerText = "⏳ Sending...";
 
-      try {
-        const res = await fetch("proxy.php", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            prompt: cleaned,
-            userId: userId,
-            sessionId: sessionId
-          }),
-        });
+  try {
+    const res = await fetch("proxy.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        prompt: cleaned,
+        userId: userId,
+        sessionId: sessionId
+      }),
+    });
 
-        const data = await res.json();
-        chatBody.innerText = data?.response || "⚠️ No response from API.";
-      } catch (error) {
-        chatBody.innerText = "❌ Error: " + error.message;
-        console.error("Request error:", error);
-      }
+    let data;
+    try {
+      data = await res.json();
+    } catch (e) {
+      const text = await res.text();
+      chatBody.innerText = "⚠️ Invalid JSON from server:\n" + text;
+      return;
     }
+
+    chatBody.innerText = data?.response || "⚠️ No response from API.";
+  } catch (error) {
+    chatBody.innerText = "❌ Error: " + error.message;
+    console.error("Request error:", error);
+  }
+}
+
 
     sendBtn.addEventListener("click", () => {
       sendPrompt(userInput.value);
