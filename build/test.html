@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Simple Chat</title>
 </head>
 <body>
-  <input id="userInput" type="text" placeholder="Type something..." />
+  <h2>Chat with AI</h2>
+  <input type="text" id="userInput" placeholder="Type your message" />
   <button id="sendBtn">Send</button>
-  <div id="chatBody" style="margin-top: 20px; font-family: sans-serif;"></div>
+  <pre id="chatBody" style="white-space: pre-wrap; background: #f0f0f0; padding: 1em; margin-top: 1em;"></pre>
 
   <script>
     // Generate UUID
@@ -36,11 +38,7 @@
     ensureCookie("userId", () => "guest-" + generateUUID());
     ensureCookie("sessionId", generateUUID);
 
-    // API constants
-    const agentId = "1acefbf8-6b7c-4ef9-af9e-32dc00029a48";
-    const apiKey = "61597eab559ac4fb3b71242b7f88fe8c";
-
-    // DOM elements
+    // DOM Elements
     const userInput = document.getElementById("userInput");
     const sendBtn = document.getElementById("sendBtn");
     const chatBody = document.getElementById("chatBody");
@@ -60,18 +58,15 @@
       chatBody.innerText = "⏳ Sending...";
 
       try {
-        const res = await fetch("https://agent-kinkybunny.aag.systems/api/interact", {
+        const res = await fetch("proxy.php", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "x-api-key": apiKey,
-            "accept": "application/json",
           },
           body: JSON.stringify({
-            agentId,
-            userId,
-            sessionId,
             prompt: cleaned,
+            userId: userId,
+            sessionId: sessionId
           }),
         });
 
