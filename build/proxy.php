@@ -40,7 +40,7 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
     "x-api-key: $apiKey",
     "Accept: application/json"
 ]);
-
+curl_setopt($ch, CURLOPT_TIMEOUT, 20); 
 $response = curl_exec($ch);
 $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 $error = curl_error($ch);
