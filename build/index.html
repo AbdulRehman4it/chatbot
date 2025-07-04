@@ -86,7 +86,7 @@
 <script>
 document.getElementById("newChatBtn").addEventListener("click", function () {
   chatBody.innerHTML = "";
-  // fetchGreetingFromAPI();
+  fetchGreetingFromAPI();
 });
 </script>
             <!-- Main Chat Section (Placeholder) -->
@@ -533,7 +533,7 @@ async function fetchGreetingFromAPI() {
 confirmAgeBtn.addEventListener("click", () => {
   agePopup.style.display = "none";
   chatBody.innerHTML = ""; // clear chat
-  // fetchGreetingFromAPI();
+  fetchGreetingFromAPI();
 });
 
     exitBtn.addEventListener("click", () => {
