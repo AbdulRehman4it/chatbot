@@ -258,7 +258,7 @@ function getCookie(name) {
 }
 
 function setCookie(name, value) {
- const expiryInSeconds = 600; 
+ const expiryInSeconds = 1200; 
   document.cookie = `${name}=${value}; path=/; max-age=${expiryInSeconds}`;
 }
 
@@ -269,7 +269,7 @@ function ensureCookie(name, generatorFn) {
 }
 
 ensureCookie("userId", () => "guest-" + generateUUID());
-ensureCookie("sessionId", generateUUID());
+setCookie("sessionId", generateUUID());
 
 
 
