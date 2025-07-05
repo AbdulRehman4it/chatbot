@@ -26,6 +26,8 @@ curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 $response = curl_exec($ch);
 
 if ($response === false) {
+    $error = curl_error($ch);
+    file_put_contents("failed-urls.log", date('Y-m-d H:i:s') . " - CURL FAILED: $url | Error: $error" . PHP_EOL, FILE_APPEND);
     http_response_code(502);
     echo "Curl error: " . curl_error($ch);
     curl_close($ch);
