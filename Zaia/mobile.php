@@ -254,7 +254,7 @@ function renderProfileCards(profiles) {
   profiles.forEach((p) => {
     html += `
       <div class="bg-[#161616] rounded-2xl p-4 space-y-2 min-w-[250px]">
-        <img src="${p.image}" class="rounded-xl w-full h-48 object-cover mb-4" />
+        <img src="${p.image}" class="rounded-xl w-full h-48 object-cotain mb-4" />
         <p><span class="text-[#777777]">Name:</span> <span class="text-white">${p.name}</span></p>
         <p><span class="text-[#777777]">Platform:</span> <span class="text-white">OnlyFans</span></p>
         <p class="text-sm text-[#777777]">Bio:</p>
