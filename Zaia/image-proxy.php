@@ -16,18 +16,24 @@ if (!filter_var($url, FILTER_VALIDATE_URL)) {
 $ch = curl_init($url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0");
+curl_setopt($ch, CURLOPT_TIMEOUT, 15); // ⏱️ Optional: add timeout for safety
+curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+  "Referer: https://kinkybunny.app"
+]);
 
 $image = curl_exec($ch);
 $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 $contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+$error = curl_error($ch);
 curl_close($ch);
 
 if ($httpCode !== 200 || !$image) {
   http_response_code(500);
-  echo "Failed to load image.";
+  echo "Failed to load image. " . ($error ?: "Status code: $httpCode");
   exit;
 }
 
 header("Content-Type: $contentType");
 echo $image;
+?>
