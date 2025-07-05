@@ -302,7 +302,7 @@ function addTyping() {
     <div id="agentTyping" class="flex gap-3 animate-pulse">
       <img src="./assets/img/zaia.jpg" class="w-10 h-10 rounded-full ml-3" />
       <div class="bg-[#1E1E1E] text-[#777777] text-sm px-6 py-2 rounded-full max-w-3xl">
-        ⁠Got your vibe. Give me a moment to pull the best
+      Sit tight, babe — Zaia’s decoding your mood as we speak 😏
       </div>
     </div>`;
      scrollToBottom();
