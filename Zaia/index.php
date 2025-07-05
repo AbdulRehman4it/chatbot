@@ -391,7 +391,7 @@ if (bio.split(/\s+/).length > 25) {
 }
 const tagPattern = /\b(joi|feet|dom|sub|dildo|cum|porn|sexting|hucow|latex|fetish|milf|daddy|solo|orgy|anal|bdsm|kink|blowjob|threesome|toys|nude|rated|wet|lesbian|gay|girl-on-girl|cock|pussy|masturbat(e|ion)|onlyfans)\b/gi;
 const tags = bio.match(tagPattern) || [];
-    const image = match[4]?.trim() || "https://kinkybunny.app/Zaia/assets/img/logo.png";
+    const image = match[4]?.trim() || "https://kinkybunny.app/Zaia/assets/img/loader.png";
     if (bio.split(/\s+/).length > 25) bio = bio.split(/\s+/).slice(0, 25).join(" ") + "…";
     profiles.push({ name, link, bio, image, tags });
   }
@@ -418,7 +418,7 @@ if (bio.split(/\s+/).length > 25) {
 }
 const tagPattern = /\b(joi|feet|dom|sub|dildo|cum|porn|sexting|hucow|latex|fetish|milf|daddy|solo|orgy|anal|bdsm|kink|blowjob|threesome|toys|nude|rated|wet|lesbian|gay|girl-on-girl|cock|pussy|masturbat(e|ion)|onlyfans)\b/gi;
 const tags = bio.match(tagPattern) || [];
-    const image = "https://kinkybunny.app/Zaia/assets/img/logo.png";
+    const image = "https://kinkybunny.app/Zaia/assets/img/loader.png";
     if (bio.split(/\s+/).length > 25) bio = bio.split(/\s+/).slice(0, 25).join(" ") + "…";
     profiles.push({ name, link, bio, image });
   }
@@ -436,7 +436,7 @@ function renderProfileCards(profiles) {
   profiles.forEach((p) => {
     html += `
       <div class="bg-[#161616] rounded-2xl p-4 space-y-2 min-w-[250px]">
-        <img src="image-proxy.php?url=${encodeURIComponent(p.image)}" class="rounded-xl w-full h-48 object-contain mb-4" />
+        <img src="image-proxy.php?url=${encodeURIComponent(p.image)}" class="rounded-xl w-full h-48 object-cover mb-4" />
         <p><span class="text-[#777777]">Name:</span> <span class="text-white">${p.name}</span></p>
         <p><span class="text-[#777777]">Platform:</span> <span class="text-white">OnlyFans</span></p>
         <p class="text-sm text-[#777777]">Bio:</p>
