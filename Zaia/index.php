@@ -244,6 +244,9 @@ const chatBody = document.getElementById("chatBody");
 const agentId = "1acefbf8-6b7c-4ef9-af9e-32dc00029a48";
 
 
+
+
+
 sendBtn.addEventListener("click", () => sendPrompt(userInput.value));
 userInput.addEventListener("keypress", (e) => {
   if (e.key === "Enter") sendPrompt(userInput.value);
@@ -299,7 +302,7 @@ function addTyping() {
     <div id="agentTyping" class="flex gap-3 animate-pulse">
       <img src="./assets/img/zaia.jpg" class="w-10 h-10 rounded-full ml-3" />
       <div class="bg-[#1E1E1E] text-[#777777] text-sm px-6 py-2 rounded-full max-w-3xl">
-        Thinking...
+        ⁠Got your vibe. Give me a moment to pull the best
       </div>
     </div>`;
      scrollToBottom();
@@ -318,13 +321,14 @@ async function sendPrompt(prompt) {
   appendUserMessage(cleaned);
   userInput.value = "";
   addTyping();
-
+ 
   const userId = getCookie("userId");
   const sessionId = getCookie("sessionId");
 
   if (!userId || !sessionId) {
     removeTyping();
     appendAgentMessage("⚠️ Missing userId or sessionId in cookies.");
+   
     return;
   }
 
@@ -374,6 +378,7 @@ async function sendPrompt(prompt) {
     console.error("❌ Error:", err);
     appendAgentMessage("Oops, something went wrong 😬");
   }
+  
 }
 
 
