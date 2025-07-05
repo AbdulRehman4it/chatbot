@@ -3,7 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Zaia || Chatbot</title>
+    <title>Zaia</title>
+    <link rel="icon" type="image/png" href="./assets/img/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="./assets/img/favicon.svg" />
+<link rel="shortcut icon" href="./assets/img/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="./assets/img/apple-touch-icon.png" />
+<link rel="manifest" href="./assets/img/site.webmanifest" />
     <link rel="stylesheet" href="./assets/css/style.css" />
     <style>
       #disclaimerBar {
@@ -193,7 +198,7 @@ document.getElementById("newChatBtn").addEventListener("click", function () {
       <aside class="w-full p-4 block lg:hidden my-4">
         <h1 class="text-2xl xl:text-3xl mb-5 text-white">RECENT CHATS</h1>
         <hr class="border-[1px] border-[#252323]" />
-        <a href="./mobile.html">
+        <a href="./mobile.php">
           <button
             class="bg-[#5A44E9] text-lg text-white w-full py-3 rounded-full font-semibold mb-4 flex items-center justify-center gap-5 mt-5"
           >

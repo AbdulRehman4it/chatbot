@@ -15,7 +15,7 @@
 
   <!-- Header -->
   <div class="flex justify-between items-center px-5 py-5">
-    <div><a href="./index.html"><img src="./assets/img/left.png" alt=""></a></div>
+    <div><a href="./index.php"><img src="./assets/img/left.png" alt=""></a></div>
     <div class="text-center">
       <h1 class="text-white text-2xl">Z.A.I.A</h1>
       <p class="text-sm text-[#777777]">Zero Artificial Intimacy Agent</p>
