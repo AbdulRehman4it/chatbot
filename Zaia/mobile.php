@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+       <title>Zaia</title>
+    <link rel="icon" type="image/png" href="./assets/img/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="./assets/img/favicon.svg" />
+<link rel="shortcut icon" href="./assets/img/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="./assets/img/apple-touch-icon.png" />
+<link rel="manifest" href="./assets/img/site.webmanifest" />
     <link rel="stylesheet" href="./assets/css/style.css">
       <script>
     window.addEventListener("DOMContentLoaded", () => {
@@ -50,7 +55,7 @@
 
 
   <script src="https://kit.fontawesome.com/a2ada4947c.js" crossorigin="anonymous"></script>
-    <script>
+  <script>
     function scrollToBottom() {
   const chat = document.getElementById("chatBody");
   chat.scrollTop = chat.scrollHeight;
@@ -209,7 +214,7 @@ if (bio.split(/\s+/).length > 25) {
 }
 const tagPattern = /\b(joi|feet|dom|sub|dildo|cum|porn|sexting|hucow|latex|fetish|milf|daddy|solo|orgy|anal|bdsm|kink|blowjob|threesome|toys|nude|rated|wet|lesbian|gay|girl-on-girl|cock|pussy|masturbat(e|ion)|onlyfans)\b/gi;
 const tags = bio.match(tagPattern) || [];
-    const image = match[4]?.trim() || "https://via.placeholder.com/300x200";
+    const image = match[4]?.trim() || "https://kinkybunny.app/Zaia/assets/img/loader.png";
     if (bio.split(/\s+/).length > 25) bio = bio.split(/\s+/).slice(0, 25).join(" ") + "…";
     profiles.push({ name, link, bio, image, tags });
   }
@@ -236,7 +241,7 @@ if (bio.split(/\s+/).length > 25) {
 }
 const tagPattern = /\b(joi|feet|dom|sub|dildo|cum|porn|sexting|hucow|latex|fetish|milf|daddy|solo|orgy|anal|bdsm|kink|blowjob|threesome|toys|nude|rated|wet|lesbian|gay|girl-on-girl|cock|pussy|masturbat(e|ion)|onlyfans)\b/gi;
 const tags = bio.match(tagPattern) || [];
-    const image = "https://via.placeholder.com/300x200";
+    const image = "https://kinkybunny.app/Zaia/assets/img/loader.png";
     if (bio.split(/\s+/).length > 25) bio = bio.split(/\s+/).slice(0, 25).join(" ") + "…";
     profiles.push({ name, link, bio, image });
   }
@@ -254,7 +259,7 @@ function renderProfileCards(profiles) {
   profiles.forEach((p) => {
     html += `
       <div class="bg-[#161616] rounded-2xl p-4 space-y-2 min-w-[250px]">
-        <img src="${p.image}" class="rounded-xl w-full h-48 object-cotain mb-4" />
+        <img src="image-proxy.php?url=${encodeURIComponent(p.image)}" class="rounded-xl w-full h-48 object-cover mb-4" />
         <p><span class="text-[#777777]">Name:</span> <span class="text-white">${p.name}</span></p>
         <p><span class="text-[#777777]">Platform:</span> <span class="text-white">OnlyFans</span></p>
         <p class="text-sm text-[#777777]">Bio:</p>
@@ -274,7 +279,7 @@ function renderProfileCards(profiles) {
 
 async function fetchGreetingFromAPI() {
   const greetings = [
- "Hey babe 😘 What vibe are we feeling today? Give me a word.",
+    "Hey babe 😘 What vibe are we feeling today? Give me a word.",
     "Hi sweetie 💋 What’s your mood right now? Drop a keyword and I’ll do the rest.",
     "Well, well… look who’s here 👀 What kind of energy are we chasing today?",
     "Hey there 😏 Gimme a word—soft, bold, wild... whatever you're into.",
