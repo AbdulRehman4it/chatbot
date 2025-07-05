@@ -1,53 +1,62 @@
 <?php
-// Enable error reporting for debugging (remove in production)
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
 header("Access-Control-Allow-Origin: *");
 
-// Get and decode the URL parameter
-$url = isset($_GET['url']) ? urldecode($_GET['url']) : null;
-
-if (!$url) {
+if (!isset($_GET['url'])) {
     http_response_code(400);
-    echo "Missing url parameter";
+    echo "Missing 'url' parameter.";
     exit;
 }
 
-// Validate URL schema (http or https)
-if (!preg_match('/^https?:\/\//i', $url)) {
+$url = $_GET['url'];
+
+if (!filter_var($url, FILTER_VALIDATE_URL) || !in_array(parse_url($url, PHP_URL_SCHEME), ['http', 'https'])) {
     http_response_code(400);
-    echo "Invalid URL schema";
+    echo "Invalid URL.";
     exit;
 }
 
 $ch = curl_init($url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+curl_setopt($ch, CURLOPT_HEADER, true);
+curl_setopt($ch, CURLOPT_TIMEOUT, 15);
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-curl_setopt($ch, CURLOPT_TIMEOUT, 20);
-curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT'] ?? 'Mozilla/5.0');
 
-$image = curl_exec($ch);
-$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-$curlErr = curl_error($ch);
-curl_close($ch);
+$response = curl_exec($ch);
 
-if ($image === false || $httpCode !== 200) {
+if ($response === false) {
     http_response_code(502);
-    echo "Failed to fetch image. HTTP code: $httpCode, cURL error: $curlErr";
+    echo "Curl error: " . curl_error($ch);
+    curl_close($ch);
     exit;
 }
 
-// Detect content type of the fetched image
-$finfo = new finfo(FILEINFO_MIME_TYPE);
-$contentType = $finfo->buffer($image);
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+$headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+$headers = substr($response, 0, $headerSize);
+$image = substr($response, $headerSize);  // <- Here we assign image content to $image
 
-header("Content-Type: $contentType");
+curl_close($ch);
 
-// Output the image content
-echo $image;
+if ($httpCode !== 200) {
+    http_response_code($httpCode);
+    echo "Error fetching image. HTTP status code: $httpCode";
+    exit;
+}
 
+foreach (explode("\r\n", $headers) as $headerLine) {
+    if (stripos($headerLine, 'Content-Type:') === 0) {
+        header($headerLine);
+    }
+    if (stripos($headerLine, 'Cache-Control:') === 0) {
+        header($headerLine);
+    }
+    if (stripos($headerLine, 'Expires:') === 0) {
+        header($headerLine);
+    }
+}
+
+echo $image; // Output the image content stored in $image
+exit;
 ?>
