@@ -44,7 +44,7 @@
 
 
   <script src="https://kit.fontawesome.com/a2ada4947c.js" crossorigin="anonymous"></script>
-   <script>
+    <script>
     function scrollToBottom() {
   const chat = document.getElementById("chatBody");
   chat.scrollTop = chat.scrollHeight;
@@ -54,18 +54,41 @@ const userInput = document.getElementById("userInput");
 const chatBody = document.getElementById("chatBody");
 
 const agentId = "1acefbf8-6b7c-4ef9-af9e-32dc00029a48";
-const userId = "802588d7-6079-404f-b8fd-444cc614ff73";
+
 
 sendBtn.addEventListener("click", () => sendPrompt(userInput.value));
 userInput.addEventListener("keypress", (e) => {
   if (e.key === "Enter") sendPrompt(userInput.value);
 });
 
+
 function generateUUID() {
   return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
     (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
   );
 }
+
+
+function getCookie(name) {
+  const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
+  return match ? decodeURIComponent(match[2]) : null;
+}
+
+function setCookie(name, value) {
+ const expiryInSeconds = 1200; 
+  document.cookie = `${name}=${value}; path=/; max-age=${expiryInSeconds}`;
+}
+
+function ensureCookie(name, generatorFn) {
+  if (!getCookie(name)) {
+    setCookie(name, generatorFn());
+  }
+}
+
+ensureCookie("userId", () => "guest-" + generateUUID());
+setCookie("sessionId", generateUUID());
+
+
 
 function appendUserMessage(msg) {
   chatBody.innerHTML += `<div class="flex justify-end">
@@ -98,6 +121,8 @@ function removeTyping() {
   document.getElementById("agentTyping")?.remove();
 }
 
+
+
 async function sendPrompt(prompt) {
   const cleaned = prompt.trim();
   if (!cleaned) return;
@@ -106,14 +131,19 @@ async function sendPrompt(prompt) {
   userInput.value = "";
   addTyping();
 
-  const sessionId = generateUUID();
+  const userId = getCookie("userId");
+  const sessionId = getCookie("sessionId");
+
+  if (!userId || !sessionId) {
+    removeTyping();
+    appendAgentMessage("⚠️ Missing userId or sessionId in cookies.");
+    return;
+  }
 
   try {
-    const res = await fetch("https://agent-kinkybunny.aag.systems/api/interact", {
+    const res = await fetch("proxy.php", {
       method: "POST",
       headers: {
-        accept: "application/json",
-        "x-api-key": "61597eab559ac4fb3b71242b7f88fe8c",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -124,6 +154,11 @@ async function sendPrompt(prompt) {
       }),
     });
 
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`HTTP error ${res.status}: ${text}`);
+    }
+
     const data = await res.json();
     removeTyping();
 
@@ -132,7 +167,6 @@ async function sendPrompt(prompt) {
       return;
     }
 
-    // Response handling logic
     const resp = data.response;
     if (typeof resp === "string") {
       if (resp.includes("Name:") && resp.includes("Link:")) {
@@ -153,6 +187,7 @@ async function sendPrompt(prompt) {
     appendAgentMessage("Oops, something went wrong 😬");
   }
 }
+
 
 function renderProfilesFromText(text) {
   const profilePattern = /Name:\s*(.+?)\s+Link:\s*(https?:\/\/[^\s]+)\s+Bio:\s*([\s\S]*?)(?:\s+Image:\s*(https?:\/\/[^\s]+))?(?=\s+Name:|$)/g;
@@ -232,35 +267,37 @@ function renderProfileCards(profiles) {
 }
 
 async function fetchGreetingFromAPI() {
-  const sessionId = generateUUID();
-  try {
-    const res = await fetch("https://agent-kinkybunny.aag.systems/api/interact", {
-      method: "POST",
-      headers: {
-        accept: "application/json",
-        "x-api-key": "61597eab559ac4fb3b71242b7f88fe8c",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        agentId,
-        userId,
-        sessionId,
-        prompt: "hi" // ✅ Replace with correct trigger if needed
-      }),
-    });
+  const greetings = [
+ "Hey babe 😘 What vibe are we feeling today? Give me a word.",
+    "Hi sweetie 💋 What’s your mood right now? Drop a keyword and I’ll do the rest.",
+    "Well, well… look who’s here 👀 What kind of energy are we chasing today?",
+    "Hey there 😏 Gimme a word—soft, bold, wild... whatever you're into.",
+    "Mmm, you caught me at the perfect time 😇 What’s the flavor you’re craving?",
+    "Hello gorgeous 🌶 What kind of mood are we in? One word is all I need.",
+    "Hey sugar 💖 What vibe are we diving into? Just say the word.",
+    "Hi babe ! 😌 What’s your vibe today?",
+    "Hi hot stuff 🔥 Let me know what you're into—just one word will do.",
+    "Hey cutie 💫 What are you in the mood to explore? Drop me a hint.",
+    "Looking for trouble again, huh? 😈 What’s the mood today?",
+    "Welcome, babe 😍 What kind of vibe are we playing with?",
+    "What are you in the mood to uncover, love? 😘 Just say the vibe.",
+    "Hey you 😏 Give me your mood, your kink, your keyword—I'm listening.",
+    "You rang? 😋 Tell me your vibe and I’ll bring the heat.",
+    "Zaia at your service 💋 Give me a mood or keyword and I’ll find your match.",
+    "Just you and me now 😇 What energy are we channeling today?",
+    "Hi darling ✨ Drop a keyword—I'll turn it into magic.",
+    "Mmm, I’ve got something for every mood 😉 What are you craving?",
+    "Let’s get to it, shall we? 😌 What vibe are we chasing?"
+  ];
 
-    const data = await res.json();
-    if (data && data.response) {
-      appendAgentMessage(data.response);
-    } else {
-      appendAgentMessage("⚠️ No greeting received.");
-    }
-  } catch (err) {
-    console.error("❌ Greeting API error:", err);
-    appendAgentMessage("⚠️ Failed to load greeting.");
-  }
+  const randomIndex = Math.floor(Math.random() * greetings.length);
+  const randomGreeting = greetings[randomIndex];
+
+  // Optional tiny delay for async simulation
+  await new Promise(resolve => setTimeout(resolve, 100));
+
+  appendAgentMessage(randomGreeting);
 }
-fetchGreetingFromAPI();
 </script>
 </body>
 

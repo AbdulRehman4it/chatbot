@@ -20,11 +20,11 @@
     </style>
   </head>
   <body class="bg-[#0E0E0F]">
-    <section class="lg:block hidden">
+<section class="lg:block hidden">
       <div class="font-sans bg-[#0E0E0E] flex">
         <!-- Vertical Sidebar (Left Side) -->
         <div
-          class="fixed left-0 top-0 w-28 h-screen flex flex-col items-center justify-between pt-6 border-r border-[#252323] sticky"
+          class="fixed left-0 top-0 w-28 flex flex-col items-center justify-between pt-6 border-r border-[#252323] sticky"
         >
           <div class="flex flex-col gap-16 items-center">
             <!-- Top logo -->
@@ -70,7 +70,7 @@
           <div class="flex-1 flex">
             <!-- Sidebar Content (Recent Chats) -->
             <aside
-              class="w-80 p-4 hidden md:block border my-4 mx-4 rounded-2xl border-[#252323]"
+              class="w-80 h-[calc(90vh-80px)] p-4 hidden md:block border my-4 mx-4 rounded-2xl border-[#252323]"
             >
             
               <h1 class="text-2xl xl:text-3xl mb-5 text-white">RECENT CHATS</h1>
@@ -90,7 +90,7 @@ document.getElementById("newChatBtn").addEventListener("click", function () {
 });
 </script>
             <!-- Main Chat Section (Placeholder) -->
-<main class="flex flex-col h-[calc(100vh-80px)] w-full border border-[#252323] my-4 rounded-2xl 2xl:mr-10 md:mr-5 bg-[#0E0E0E]">
+<main class="flex flex-col h-[calc(90vh-80px)] w-full border border-[#252323] my-4 rounded-2xl 2xl:mr-10 md:mr-5 bg-[#0E0E0E]">
 
   <!-- Top Section (Title + Avatar) -->
   <div class="p-6">
@@ -451,26 +451,26 @@ function renderProfileCards(profiles) {
 
 async function fetchGreetingFromAPI() {
   const greetings = [
-    "Hey sexy, ready for some fun?",
-    "Hello gorgeous, what’s on your naughty mind?",
-    "Hi babe, want to get a little wild?",
-    "Hey there, you look irresistible today!",
-    "Ready to play? I’m all yours.",
-    "Hello hottie, what’s your fantasy?",
-    "Hey cutie, let’s make this interesting.",
-    "Hi darling, craving some excitement?",
-    "Hey babe, I’m feeling a little naughty.",
-    "Hello sexy, let’s heat things up!",
-    "Hey you, wanna get a little dirty?",
-    "Hi love, ready to tease and please?",
-    "Hey there, let’s make some magic happen.",
-    "Hello beautiful, what’s your secret desire?",
-    "Hey hottie, I’m here to satisfy you.",
-    "Hi sexy, can I be your temptation?",
-    "Hey darling, let’s have some fun tonight.",
-    "Hello babe, ready to explore?",
-    "Hey cutie, I’m feeling naughty and nice.",
-    "Hi love, wanna get a little adventurous?"
+    "Hey babe 😘 What vibe are we feeling today? Give me a word.",
+    "Hi sweetie 💋 What’s your mood right now? Drop a keyword and I’ll do the rest.",
+    "Well, well… look who’s here 👀 What kind of energy are we chasing today?",
+    "Hey there 😏 Gimme a word—soft, bold, wild... whatever you're into.",
+    "Mmm, you caught me at the perfect time 😇 What’s the flavor you’re craving?",
+    "Hello gorgeous 🌶 What kind of mood are we in? One word is all I need.",
+    "Hey sugar 💖 What vibe are we diving into? Just say the word.",
+    "Hi babe ! 😌 What’s your vibe today?",
+    "Hi hot stuff 🔥 Let me know what you're into—just one word will do.",
+    "Hey cutie 💫 What are you in the mood to explore? Drop me a hint.",
+    "Looking for trouble again, huh? 😈 What’s the mood today?",
+    "Welcome, babe 😍 What kind of vibe are we playing with?",
+    "What are you in the mood to uncover, love? 😘 Just say the vibe.",
+    "Hey you 😏 Give me your mood, your kink, your keyword—I'm listening.",
+    "You rang? 😋 Tell me your vibe and I’ll bring the heat.",
+    "Zaia at your service 💋 Give me a mood or keyword and I’ll find your match.",
+    "Just you and me now 😇 What energy are we channeling today?",
+    "Hi darling ✨ Drop a keyword—I'll turn it into magic.",
+    "Mmm, I’ve got something for every mood 😉 What are you craving?",
+    "Let’s get to it, shall we? 😌 What vibe are we chasing?"
   ];
 
   const randomIndex = Math.floor(Math.random() * greetings.length);
